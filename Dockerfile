@@ -1,36 +1,43 @@
 # Inspired from https://gist.github.com/avishayp/33fcee06ee440524d21600e2e817b6b7
 # Usage:
-# $ docker build -t non-root:1.0.0 --build-arg GID=1000 --build-arg GNAME=docker --build-arg USER=non-root .
+# $ docker build -t non-root:1.0.0 --build-arg GID=1000 --build-arg GNAME=docker --build-arg UNAME=non-root .
 # $ docker run -i -t --rm -v $(pwd):/$(pwd) -w $(pwd) non-root:1.0.0 ash
 
 FROM alpine
 
 ARG GID=1000
+ENV GID=$GID
 ARG GNAME=defaultgroup
-ARG USER=defaultuser
+ENV GNAME=$GNAME
+ARG UNAME=defaultuser
+ENV UNAME=$UNAME
 
-ENV HOME /home/$USER
+# Update package repositories
+RUN apk upgrade --no-cache -a &&\
+    apk update --no-cache --quiet
 
 # Install packages as root
-RUN apk upgrade --no-cache -a
-RUN apk update --no-cache --quiet
-RUN apk add --no-cache --quiet sudo curl
+RUN set -x &&\
+    apk add --update --upgrade curl doas doas-sudo-shim &&\
+    apk upgrade &&\
+    rm -fr /var/cache/apk/* &&\
 
 # Add group
-RUN addgroup -g $GID $GNAME
+    addgroup -g $GID $GNAME &&\
+
 # Add new user
-RUN adduser -D $USER -G $GNAME \
-        && mkdir -p /etc/sudoers.d \
-        && echo "$USER ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/$USER \
-        && chmod 0440 /etc/sudoers.d/$USER
+    adduser -G $GNAME -D $UNAME &&\
 
-USER $USER
-WORKDIR $HOME
+# Allow $UNAME to sudo/doas as root
+    echo "permit nopass $UNAME" >> /etc/doas.d/$UNAME.conf &&\
+    echo "permit nopass 0" >> /etc/doas.d/root.conf
 
-# Files in /home/$USER to be owned by $USER
-# Docker has --chown flag for COPY, but it does not expand ENV so we fallback to:
+USER $UNAME
+WORKDIR /home/$UNAME
+
+# Files in /home/$UNAME to be owned by $UNAME
 # COPY src src
-# RUN sudo chown -R $USER:$USER $HOME
+# RUN sudo chown -R $UNAME:$GNAME /home/$UNAME
 
-CMD echo "User $(whoami) running from $PWD with premissions: $(sudo -l)"
+CMD echo "User $(whoami) running from $PWD with premissions: $(doas env)"
 
