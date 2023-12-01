@@ -29,7 +29,7 @@ RUN set -x &&\
     adduser -G $GNAME -D $UNAME &&\
 
 # Allow $UNAME to sudo/doas as root
-    echo "permit nopass $UNAME" >> /etc/doas.d/$UNAME.conf &&\
+    echo "permit nopass keepenv $UNAME" >> /etc/doas.d/$UNAME.conf &&\
     echo "permit nopass 0" >> /etc/doas.d/root.conf
 
 USER $UNAME
