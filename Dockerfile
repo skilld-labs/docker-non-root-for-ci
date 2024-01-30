@@ -13,14 +13,14 @@ ENV GNAME=$GNAME
 ARG UNAME=defaultuser
 ENV UNAME=$UNAME
 
-# Update package repositories
-RUN apk upgrade --no-cache -a &&\
-    apk update --no-cache --quiet
-
-# Install packages as root
 RUN set -x && \
-    apk add --update --upgrade curl doas doas-sudo-shim && \
-    apk upgrade && \
+# Update package list
+    apk update --quiet && \
+# Upgrade base image files
+    apk upgrade -a && \
+# Install packages as root
+    apk add curl doas doas-sudo-shim && \
+# Purge cache files to pull less
     rm -fr /var/cache/apk/* && \
 # Add group
     addgroup -g $GID $GNAME && \
