@@ -1,6 +1,6 @@
 # Inspired from https://gist.github.com/avishayp/33fcee06ee440524d21600e2e817b6b7
 # Usage:
-# $ docker build -t non-root:1.0.0 --build-arg GID=1000 --build-arg GNAME=docker --build-arg UNAME=non-root .
+# $ docker build -t non-root:1.0.0 --build-arg GID=1000 --build-arg GNAME=docker --build-arg UNAME=non-root --build-arg ALPINE_VERSION=3.21 .
 # $ docker run -i -t --rm -v $(pwd):/$(pwd) -w $(pwd) non-root:1.0.0 ash
 
 ARG ALPINE_VERSION=latest
@@ -37,5 +37,5 @@ WORKDIR /home/$UNAME
 # COPY src src
 # RUN sudo chown -R $UNAME:$GNAME /home/$UNAME
 
-CMD echo "User $(whoami) running from $PWD with premissions: $(doas env)"
+CMD ["sh", "-c", "echo User $(whoami) running from $PWD with premissions: $(doas env)"]
 
