@@ -19,7 +19,7 @@ RUN set -x && \
 # Upgrade base image files
     apk upgrade -a && \
 # Install packages as root
-    apk add curl doas doas-sudo-shim && \
+    apk add curl doas doas-sudo-shim yq && \
 # Purge cache files to pull less
     rm -fr /var/cache/apk/* && \
 # Add group
