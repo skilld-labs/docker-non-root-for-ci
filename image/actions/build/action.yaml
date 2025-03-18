@@ -1,18 +1,26 @@
-working_directory: "{{ .current_working_dir }}"
 action:
   title: Build
-  description: Create new docker image from local files
+  description: Create
+  options:
+    - name: firstoption
+      title: First option
+      type: string
+      default: ""
+    - name: secondoption
+      title: Second option
+      description: Option to do something
+      type: boolean
+      default: false
 
 runtime:
-  type: container
-  image: image-actions-build:latest
-  build:
-    context: ./
-    args:
-      USER_ID: {{ .current_uid }}
-      GROUP_ID: {{ .current_gid }}
-      USER_NAME: plasma
-  command:
-    - /bin/sh
-    - /action/action.sh
-
+  type: shell
+  env:
+    MY_ENV_VAR: "my_env_var"
+  script: |
+    $$SHELL -l
+    date
+    pwd
+    whoami
+    env
+    echo ""
+    {{ .action_dir }}/main.sh "{{ .firstoption }}" "{{ .secondoption }}"
