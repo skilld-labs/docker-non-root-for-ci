@@ -2,12 +2,6 @@ working_directory: "{{ .current_working_dir }}"
 action:
   title: Build
   description: Create new docker image from local files
-  options:
-    - name: tag
-      title: Custom tag
-      description: Option to preview changelog and tag
-      type: string
-      default: ""
 
 runtime:
   type: container
@@ -15,10 +9,10 @@ runtime:
   build:
     context: ./
     args:
-      GIT_AUTHOR_NAME: ${USER}
-      GIT_AUTHOR_EMAIL: no-reply@skilld.cloud
+      USER_ID: {{ .current_uid }}
+      GROUP_ID: {{ .current_gid }}
+      USER_NAME: plasma
   command:
-    - /bin/bash
+    - /bin/sh
     - /action/action.sh
-    - "{{ .tag }}"
 
