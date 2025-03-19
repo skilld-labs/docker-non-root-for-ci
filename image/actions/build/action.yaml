@@ -17,10 +17,9 @@ runtime:
   env:
     MY_ENV_VAR: "my_env_var"
   script: |
-    $$SHELL -l
     date
     pwd
     whoami
-    env
+    echo $SHELL
     echo ""
-    {{ .action_dir }}/main.sh "{{ .firstoption }}" "{{ .secondoption }}"
+    {{ .action_dir }}/action.sh "{{ .firstoption }}" "{{ .secondoption }}"

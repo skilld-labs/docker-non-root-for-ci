@@ -2,5 +2,4 @@
 date
 pwd
 whoami
-env
 
