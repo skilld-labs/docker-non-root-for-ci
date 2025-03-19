@@ -1,0 +1,26 @@
+action:
+  title: Build
+  description: Create
+  options:
+    - name: firstoption
+      title: First option
+      type: string
+      default: ""
+    - name: secondoption
+      title: Second option
+      description: Option to do something
+      type: boolean
+      default: false
+
+runtime:
+  type: shell
+  env:
+    MY_ENV_VAR: "my_env_var"
+  script: |
+    $$SHELL -l
+    date
+    pwd
+    whoami
+    env
+    echo ""
+    {{ .action_dir }}/main.sh "{{ .firstoption }}" "{{ .secondoption }}"
