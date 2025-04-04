@@ -1,0 +1,44 @@
+action:
+  title: Build
+  description: Create
+  arguments:
+    - name: action
+      title: Action
+      description: Operation type to use (sub/pub)
+      enum: [sub, pub]
+      required: true
+  options:
+    - name: firstoption
+      title: First option
+      type: string
+      default: ""
+    - name: secondoption
+      title: Second option
+      description: Option to do something
+      type: boolean
+      default: false
+    - name: sshpass
+      title: SSH Key passphrase
+      process:
+        - processor: keyring.GetKeyValue
+          options:
+            key: sshpass
+      default: ""
+    - name: port
+      description: The SSH port for connections (default is 22).
+      type: integer
+      process:
+        - processor: config.GetValue
+          options:
+            path: sshconfig.port
+      default: 22
+
+runtime:
+  type: shell
+  env:
+    MY_ENV_VAR: "my_env_var"
+  script: |
+    echo "firstoption: {{ .firstoption }}"
+    echo "secondoption: {{ .secondoption }}"
+    echo "sshpass: {{ .sshpass }}"
+    echo "port: {{ .port }}"

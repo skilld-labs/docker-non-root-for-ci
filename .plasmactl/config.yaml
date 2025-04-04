@@ -1,0 +1,41 @@
+launchrctl:
+  actions_naming:
+    - search: ".roles."
+      replace: "."
+    - search: "_"
+      replace: "-"
+web:
+  vars_file: platform/group_vars/platform/vars.yaml
+  variables:
+    - plasmactl_web_ui_platform_name
+    - plasmactl_web_ui_platform_page_name
+    - plasmactl_web_ui_platform_header_name
+    - plasmactl_web_ui_platform_favicon
+    - machine_color_1
+    - machine_color_2
+    - machine_color_3
+    - machine_color_4
+    - machine_color_5
+    - machine_color_6
+    - machine_color_7
+    - machine_color_8
+    - machine_color_9
+    - machine_color_10
+    - machine_color_11
+    - machine_color_12
+    - machine_color_13
+    - machine_color_14
+    - machine_color_15
+    - machine_color_16
+    - machine_color_17
+sshconfig:
+  port: 13377777
+  user: skilld
+platform:
+  entities:
+    timelog:
+      diff:
+        gitlab_url: http://projects.interaction.svc.skilld:8081/api/v4
+        odoo_url: http://erp.interaction.svc.skilld:8069
+        odoo_admin: skilld
+        odoo_db: skilld
